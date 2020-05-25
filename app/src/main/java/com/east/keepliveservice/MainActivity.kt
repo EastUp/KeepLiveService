@@ -4,9 +4,14 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.work.PeriodicWorkRequest
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.east.keepliveservice.service.GuardService
 import com.east.keepliveservice.service.JobWakeUpService
 import com.east.keepliveservice.service.MessageService
+import com.east.keepliveservice.service.PeriodicWork
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -28,6 +33,10 @@ class MainActivity : AppCompatActivity() {
             //启动JobService
             startService(Intent(this,JobWakeUpService::class.java))
         }
+
+        //使用worker进行保活
+        val request = PeriodicWorkRequestBuilder<PeriodicWork>(15, TimeUnit.MINUTES).build()
+        WorkManager.getInstance(this).enqueue(request)
 
     }
 }
